@@ -12,12 +12,15 @@ def save_as_file():
     print(file.name)
 
 def open_file():
-    files = [("All files", "*"),
-        ("Python files", ".py"),
-        ("Text files", ".txt")] 
-    file = askopenfile(filetypes=files, defaultextension=files)
+    try:
+        files = [("All files", "*"),
+            ("Python files", ".py"),
+            ("Text files", ".txt")] 
+        file = askopenfile(filetypes=files, defaultextension=files)
 
-    text_wg.replace(1.0, "end", file.read())
+        text_wg.replace(1.0, "end", file.read())
+    except AttributeError:
+        pass
 
 def highlight_text(color:str): 
         
@@ -71,8 +74,8 @@ body_btn = tk.Button(tools, text="Body", relief="solid", command=decrease_font)
 tools.grid_propagate(False)
 tools.grid(column=0, row=0, sticky=("NSEW"))
 
-save_btn.grid(column=0, row=0, sticky=("NEW"))
-open_btn.grid(column=1, row=0, sticky=("NEW"))
+save_btn.grid(column=0, row=0, sticky=("EW"))
+open_btn.grid(column=1, row=0, sticky=("EW"))
 header_btn.grid(column=0, row=1, columnspan=1, sticky=("NEW"))
 body_btn.grid(column=1, row=1, columnspan=1, sticky=("NEW"))
 
@@ -100,7 +103,9 @@ main_window.grid_rowconfigure(0, weight=1)
 
 tools.grid_columnconfigure(0, weight=1)
 tools.grid_columnconfigure(1, weight=1)
-tools.grid_rowconfigure(0, weight=1)
+tools.grid_rowconfigure(0, weight=0)
+
+
 
 text_frame.grid_columnconfigure(0, weight=3)
 text_frame.grid_rowconfigure(0, weight=3)
