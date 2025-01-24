@@ -2,14 +2,51 @@ import tkinter as tk
 from tkinter.filedialog import askopenfile, asksaveasfile
 
 def save_as_file():
-    content = text_wg.dump(1.0, "end-1c")
-    print(content)
-    files = [("All files", "*"),
-            ("Python files", ".py"),
-            ("Text files", ".txt")] 
-    file = asksaveasfile(filetypes=files, defaultextension=files)
-    file.write(content)
-    print(file.name)
+    try:
+        content = text_wg.dump(1.0, "end")
+        print(content)
+        content_formatted = ", ".join(map(str, content))
+        files = [("All files", "*"),
+                ("Python files", ".py"),
+                ("Text files", ".txt")] 
+        file = asksaveasfile(filetypes=files, defaultextension=files)
+        file.write(content_formatted)
+        print(file.name)
+    except AttributeError:
+        pass
+
+def convert_to_tupple(iterable_list= ['text', 'asdsa', '1.0', 'tagon', 'red', '1.5', 'text', 'dsa', '1.5']):
+    list_with_tuples = []
+    for item in range(0, len(iterable_list), 3):
+        list_with_tuples.append((iterable_list[item], iterable_list[item + 1], iterable_list[item + 2]))
+    return list_with_tuples
+
+def adding_lenght(iterable : list, num):
+    while len(iterable) % num != 0:
+        iterable.append((None, None, None))
+    return iterable
+
+def text_parser(list_with_tuples, target):
+    try:
+        for i in range(0, len(list_with_tuples)):
+            key, value, index = list_with_tuples[i][0], list_with_tuples[i][1], list_with_tuples[i][2]
+            print(f"Tuple: {key}, {value}, {index}")
+            if key == "text":
+                if value == "\n":
+                    target.insert(index, "")
+                else:
+                    target.insert(index, value)
+            elif key == "tagon":
+                text, ind = list_with_tuples[i+1][1], list_with_tuples[i+1][2]
+                target.insert(ind, text)
+                del list_with_tuples[i+1]
+                tag_end = list_with_tuples[i+2][2]
+                target.tag_add(f"{value}", index, tag_end)
+            elif key == "mark":
+                target.mark_set(value, index)
+    except IndexError:
+        pass
+
 
 def open_file():
     try:
@@ -17,8 +54,14 @@ def open_file():
             ("Python files", ".py"),
             ("Text files", ".txt")] 
         file = askopenfile(filetypes=files, defaultextension=files)
+        text_with_tags = file.read().split(", ")
+        text_with_tags_format = [i.replace("(", "").replace(")", "").replace("'", "") for i in text_with_tags]
+        final_text = convert_to_tupple(text_with_tags_format)
+        text_wg.delete("1.0", "end")
+        text_parser(final_text, text_wg)
 
-        text_wg.replace(1.0, "end", file.read())
+        
+        
     except AttributeError:
         pass
 
