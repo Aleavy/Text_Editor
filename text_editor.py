@@ -3,48 +3,23 @@ from tkinter.filedialog import askopenfile, asksaveasfile
 
 def save_as_file():
     try:
-        content = text_wg.dump(1.0, "end")
+        content = text_wg.dump(1.0, "end-1c")
         print(content)
         content_formatted = ", ".join(map(str, content))
         files = [("All files", "*"),
                 ("Python files", ".py"),
                 ("Text files", ".txt")] 
         file = asksaveasfile(filetypes=files, defaultextension=files)
-        file.write(content_formatted)
-        print(file.name)
-    except AttributeError:
-        pass
-
-def convert_to_tupple(iterable_list= ['text', 'asdsa', '1.0', 'tagon', 'red', '1.5', 'text', 'dsa', '1.5']):
-    list_with_tuples = []
-    for item in range(0, len(iterable_list), 3):
-        list_with_tuples.append((iterable_list[item], iterable_list[item + 1], iterable_list[item + 2]))
-    return list_with_tuples
-
-def adding_lenght(iterable : list, num):
-    while len(iterable) % num != 0:
-        iterable.append((None, None, None))
-    return iterable
-
-def text_parser(list_with_tuples, target):
-    try:
-        for i in range(0, len(list_with_tuples)):
-            key, value, index = list_with_tuples[i][0], list_with_tuples[i][1], list_with_tuples[i][2]
-            print(f"Tuple: {key}, {value}, {index}")
+        for item in content:
+            key, value, index = item[0], item[1], item[2]
             if key == "text":
-                if value == "\n":
-                    target.insert(index, "")
-                else:
-                    target.insert(index, value)
-            elif key == "tagon":
-                text, ind = list_with_tuples[i+1][1], list_with_tuples[i+1][2]
-                target.insert(ind, text)
-                del list_with_tuples[i+1]
-                tag_end = list_with_tuples[i+2][2]
-                target.tag_add(f"{value}", index, tag_end)
-            elif key == "mark":
-                target.mark_set(value, index)
-    except IndexError:
+                file.write(value)
+
+        filename = file.name.split(".")
+        filename = filename[0]+"_tags" + ".txt"
+        with open(filename, "w+") as j:
+            j.writelines(content_formatted)
+    except AttributeError:
         pass
 
 
@@ -54,14 +29,24 @@ def open_file():
             ("Python files", ".py"),
             ("Text files", ".txt")] 
         file = askopenfile(filetypes=files, defaultextension=files)
-        text_with_tags = file.read().split(", ")
-        text_with_tags_format = [i.replace("(", "").replace(")", "").replace("'", "") for i in text_with_tags]
-        final_text = convert_to_tupple(text_with_tags_format)
-        text_wg.delete("1.0", "end")
-        text_parser(final_text, text_wg)
 
-        
-        
+        filename = file.name.split(".")
+        filename = filename[0]+"_tags" + ".txt"
+        text_wg.delete("1.0", "end")
+        text_wg.replace(1.0, "end-1c", file.read())
+        with open(filename, "r+") as j:
+            content = j.read().replace("),", ")-")
+            content = content.split("-")
+            content = [eval(item.strip()) for item in content]
+            print(content)
+            for ind, item in enumerate(content):
+                key, value, index = item[0], item[1], item[2]
+                if key == "tagon":
+                    try:
+                        end_tag = content[ind+2][2]                            
+                        text_wg.tag_add(value, index, end_tag)
+                    except IndexError:
+                        text_wg.tag_add(value, index, "end-1c")
     except AttributeError:
         pass
 
