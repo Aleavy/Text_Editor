@@ -20,6 +20,7 @@ Este proyecto es una aplicación de editor de texto creada con Python y la bibli
    ```bash
    git clone https://github.com/Aleavy/Text_Editor.git
    ```
+3. Navega al directorio donde clonaste el repositorio Text_Editor y crea 2 carpetas "private" y dentro de ella "tags".
 
 ## Uso
 1. Ejecuta el archivo principal:
@@ -32,6 +33,8 @@ Este proyecto es una aplicación de editor de texto creada con Python y la bibli
 - **Ctrl + R:** Resalta el texto seleccionado en rojo.
 - **Ctrl + F:** Resalta el texto seleccionado en azul.
 - **Ctrl + Q:** Resalta el texto seleccionado en amarillo.
+- **Ctrl + B:** Vuelve el texto en negritas.
+- **Ctrl + S:** Guarda el archivo (extension por defecto: .txt).
 
 ## Estructura del proyecto
 - **text_editor.py:** Archivo principal que contiene la lógica de la aplicación.
