@@ -21,7 +21,8 @@ def save_as_file():
                 file.write(value)
 
         filename = file.name.split(".")
-        filename = filename[0]+"_tags" + ".txt"
+        filename = filename[0].replace("/private", "/private/tags") +"_tags" + ".txt"
+        print(filename)
         with open(filename, "w+") as j:
             j.writelines(content_formatted)
     except AttributeError:
@@ -36,7 +37,8 @@ def open_file():
         file = askopenfile(filetypes=files, defaultextension=".txt", initialdir="private")
 
         filename = file.name.split(".")
-        filename = filename[0]+"_tags" + ".txt"
+        filename = filename[0].replace("/private", "/private/tags") +"_tags" + ".txt"
+        print(filename)
         text_wg.delete("1.0", "end")
         text_wg.replace(1.0, "end-1c", file.read())
         with open(filename, "r+") as j:
@@ -154,6 +156,7 @@ main_window.bind("<Control-r>", lambda x: highlight_text("red"))
 main_window.bind("<Control-q>", lambda x: highlight_text("yellow"))
 main_window.bind("<Control-f>", lambda x: highlight_text("blue"))
 main_window.bind("<Control-s>", lambda x: save_as_file())
+main_window.bind("<Control-b>", lambda x: _bold())
 
 
 main_window.grid_columnconfigure(0, weight=1)
